@@ -18,3 +18,7 @@ def randomQuiz(request,id):
     randomQuizs = random.sample(list(totalQuizs),id)
     serializer = QuizSerializer(randomQuizs,many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def cafeAPI(request):
+    return Response("cafeishorse")
