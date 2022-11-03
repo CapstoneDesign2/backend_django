@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from .models import Quiz, Cafe
+from .models import Cafe, Review
 
-class QuizSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quiz
-        fields = ('title','body','answer')
-        
+
 class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
-        fields = ('name','charactor','grade','Location')
+        fields = ('id','cafe_name')
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ('id','review_name','content')

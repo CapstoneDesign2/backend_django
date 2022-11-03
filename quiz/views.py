@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Quiz, Cafe
-from .serializers import CafeSerializer, QuizSerializer
+from .models import Cafe, Review
+from .serializers import CafeSerializer, ReviewSerializer
 import random
 # Create your views here.
  
@@ -12,6 +12,7 @@ import random
 def helloAPI(request):
     return Response("hello world!")
 
+'''
 @api_view(['GET'])
 def randomQuiz(request,id):
     totalQuizs = Quiz.objects.all()
@@ -29,3 +30,9 @@ def gradeCafe(request):
     serializer = CafeSerializer(cafeList,many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def review(request):
+    reviewList = Review.objects.all()
+    serializer = ReviewSerializer(reviewList, many=true)
+    return Response(serializer.data)
+'''
