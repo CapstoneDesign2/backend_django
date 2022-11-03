@@ -10,4 +10,4 @@ class CafeSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('id','review_name','content')
+        fields = ('id','reviewer_name','content')

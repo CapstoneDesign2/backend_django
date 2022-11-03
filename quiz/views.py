@@ -7,10 +7,33 @@ import random
 # Create your views here.
  
 
-
+# sumry: 테스트용 api.
+# param:
+# usage: /quiz/hello
 @api_view(['GET'])
 def helloAPI(request):
     return Response("hello world!")
+
+# sumry: 카페를 count개 만큼 불러온다.
+# param: count
+# usage: /quiz/cafe?count=3
+@api_view(['GET'])
+def cafeAPI(request):
+    numberOfCafe = int(request.GET['count'])
+    cafes = Cafe.objects.all()[0:numberOfCafe]
+    serializer = CafeSerializer(cafes,many=True)
+    return Response(serializer.data)
+
+# sumry: id(카페id)에 맞는 리뷰를 count개 만큼 불러온다.
+# param: id, count 
+# usage: /quiz/review?id=1&count=3
+@api_view(['GET'])
+def reviewAPI(request):
+    cafeId = int(request.GET['id'])
+    numberOfReview = int(request.GET['count'])
+    reviews = Review.objects.filter(id=cafeId)[0:numberOfReview]
+    serializer = ReviewSerializer(reviews,many=True)
+    return Response(serializer.data)
 
 '''
 @api_view(['GET'])
