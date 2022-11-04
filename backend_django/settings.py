@@ -83,8 +83,9 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 
 DATABASES = os.environ["DATABASE"] if IS_HEROKU else my_db
 
-#db_from_env = dj_database_url.config(conn_max_age=500)
-#DATABASES['default'].update(db_from_env)
+if IS_HEROKU:
+    db_from_env = dj_database_url.config(default=os.environ["DATABASE_URL"])
+    DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
