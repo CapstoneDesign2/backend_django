@@ -35,6 +35,7 @@ IS_HEROKU = "DYNO" in os.environ
 SECRET_KEY = os.environ["DJANGO_SECRET"] if IS_HEROKU else my_secret
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# 헤로쿠 환경인 경우 DEBUG는 False 로 세팅.
 DEBUG = False if IS_HEROKU else True
 
 ALLOWED_HOSTS = ['*']
