@@ -81,12 +81,22 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = os.environ["DATABASE"] if IS_HEROKU else my_db
+#DATABASES = os.environ["DATABASE"] if IS_HEROKU else my_db
+DATABASES = {
+    'default': {
+        'ENGINE': '',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
 
 if IS_HEROKU:
-    db_from_env = dj_database_url.config(default=os.environ["DATABASE_URL"])
-    DATABASES['default'].update(db_from_env)
-
+    DATABASES['default'] = dj_database_url.config(default=os.environ["DATABASE_URL"])
+else:
+    DATABASES = my_db
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
