@@ -20,17 +20,16 @@ except:
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_HEROKU = "DYNO" in os.environ
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    SECRET_KEY = my_secret
-except:
-    SECRET_KEY = os.environ.get('DJANGO_SECRET',None)
+SECRET_KEY = os.environ["DJANGO_SECRET"] if IS_HEROKU else my_secret
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if IS_HEROKU else True
 
 ALLOWED_HOSTS = ['*']
 
@@ -82,10 +81,7 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-try:
-    DATABASES = my_db
-except:
-    DATABASES = os.environ.get('DATABASE',None)
+DATABASES = os.environ["DATABASE"] if IS_HEROKU else my_db
 
 #db_from_env = dj_database_url.config(conn_max_age=500)
 #DATABASES['default'].update(db_from_env)
