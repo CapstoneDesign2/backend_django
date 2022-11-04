@@ -13,13 +13,19 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-try:
+
+#로컬에서 사용할 my_db, my_secret.
+try: 
     from .my_settings import DATABASES as my_db, SECRET as my_secret
-except:
+#헤로쿠에서는 my_settings 가 없으므로 패스.
+except: 
     pass
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#환경변수에서 DYNO가 있는지 확인. 현재 환경이 헤로쿠인 경우 True. 로컬인 경우 False.
 IS_HEROKU = "DYNO" in os.environ
 
 # Quick-start development settings - unsuitable for production
@@ -93,10 +99,12 @@ DATABASES = {
     }
 }
 
+#데이터베이스 정보. 헤로쿠인 경우 환경변수 참조, 로컬인 경우 my_settings 참조.
 if IS_HEROKU:
     DATABASES['default'] = dj_database_url.config(default=os.environ["DATABASE_URL"])
 else:
     DATABASES = my_db
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
