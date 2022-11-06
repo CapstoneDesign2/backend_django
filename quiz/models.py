@@ -19,3 +19,6 @@ class Review(models.Model):
         managed = False
         db_table = 'Review'
         unique_together = (('reviewer_name', 'content', 'id'),)
+        
+        
+#git test
