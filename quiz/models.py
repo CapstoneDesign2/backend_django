@@ -3,7 +3,10 @@ from django.db import models
 # Create your models here.
 class Cafe(models.Model):
     id = models.IntegerField(primary_key=True)
-    cafe_name = models.CharField(max_length=256)
+    place_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    x = models.DecimalField(max_digits=20, decimal_places=16, blank=True, null=True)
+    y = models.DecimalField(max_digits=20, decimal_places=16, blank=True, null=True)
 
     class Meta:
         managed = False

@@ -5,7 +5,7 @@ from .models import Cafe, Review, Signuptest
 class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
-        fields = ('id','cafe_name')
+        fields = ('id','place_name','phone','x','y')
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
