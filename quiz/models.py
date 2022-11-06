@@ -28,6 +28,6 @@ class Signuptest(models.Model):
         managed = False
         db_table = 'signupTest'
 
-    def __str__(self):
-        return self.text
+#    def __str__(self):
+#        return self.text
 #git test
