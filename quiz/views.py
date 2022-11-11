@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Cafe, Review, Signuptest
-from .serializers import CafeSerializer, ReviewSerializer, TestSerializer
+from .serializers import CafeSerializer, ReviewSerializer, TestSerializer, CafeLocationSerializer 
 from rest_framework import status
 import random
 # Create your views here.
@@ -45,7 +45,25 @@ def signupTestAPI(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# sumry: user 의 현재 x , y 좌표를 가져온다.
+# param: x, y
+# usage: /quiz/location?x=&y=
+@api_view(['GET'])
+def cafeLocationAPI(request):
+   
+    curX = float(request.GET['x'])
+    curY = float(request.GET['y'])
     
+    # 가능 cafeLocationlist = Cafe.objects.raw('SELECT * FROM Cafe WHERE (x + y) > (%s - %s)',([curX],[curY]))
+    # 가능 cafeLocationlist = Cafe.objects.raw('SELECT * FROM Cafe WHERE (x + y) > 164.492')
+    
+    CafeLocationlist = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 50 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
+    
+    serializer = CafeLocationSerializer(CafeLocationlist,many=True)
+    return Response(serializer.data)
+
+
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):

@@ -5,3 +5,4 @@ from .models import Cafe, Review, Signuptest
 admin.site.register(Cafe)
 admin.site.register(Review)
 admin.site.register(Signuptest)
+

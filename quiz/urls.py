@@ -1,9 +1,10 @@
 from django.urls import path, include
-from .views import cafeAPI, helloAPI, reviewAPI, signupTestAPI
+from .views import cafeAPI, helloAPI, reviewAPI, signupTestAPI, cafeLocationAPI
 
 urlpatterns = [
     path("hello/",helloAPI),
     path("cafe/",cafeAPI),
     path("review/",reviewAPI),
-    path("Test/",signupTestAPI)
+    path("test/",signupTestAPI),
+    path("location/",cafeLocationAPI)
 ]
