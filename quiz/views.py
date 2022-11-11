@@ -51,6 +51,7 @@ def signupTestAPI(request):
 # param: x, y
 # usage: /quiz/location?x=&y=
 # 의미없는 주석
+# 의미없는 추석
 @api_view(['GET'])
 def cafeLocationAPI(request):
    
