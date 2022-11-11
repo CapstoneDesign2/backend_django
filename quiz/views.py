@@ -46,6 +46,7 @@ def signupTestAPI(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # sumry: user 의 현재 x , y 좌표를 가져온다.
 # param: x, y
 # usage: /quiz/location?x=&y=
@@ -62,6 +63,7 @@ def cafeLocationAPI(request):
     
     serializer = CafeLocationSerializer(CafeLocationlist,many=True)
     return Response(serializer.data)
+
 
 
 '''
