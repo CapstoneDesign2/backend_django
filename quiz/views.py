@@ -65,6 +65,7 @@ def cafeLocationAPI(request):
     return Response(serializer.data)
 
 
+#성원 의미없는 주석
 
 '''
 @api_view(['GET'])
