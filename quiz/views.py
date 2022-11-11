@@ -68,6 +68,7 @@ def cafeLocationAPI(request):
 
 
 #성원 의미없는 주석
+#성원 의미없는 주석2
 
 '''
 @api_view(['GET'])
