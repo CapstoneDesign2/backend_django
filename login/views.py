@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import User
-from .serializers import UserSerializer 
+from quiz.models import User
+from quiz.serializers import UserSerializer 
 from rest_framework import status
 from django.http.response import HttpResponse
 # Create your views here.
@@ -34,7 +34,7 @@ def registerAPI(request):
             serializer.save()
             return Response(serializer.data, status=200)
         else:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 #sumry: 이메일, 암호 받아서 로그인 시도.
 #param: email, password
