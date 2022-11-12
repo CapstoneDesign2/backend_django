@@ -32,7 +32,7 @@ def cafeAPI(request):
 def reviewAPI(request):
     cafeId = int(request.GET['id'])
     numberOfReview = int(request.GET['count'])
-    reviews = Review.objects.filter(id=cafeId)[0:numberOfReview]
+    reviews = Review.objects.filter(store=cafeId)[0:numberOfReview]
     serializer = ReviewSerializer(reviews,many=True)
     return Response(serializer.data)
 
