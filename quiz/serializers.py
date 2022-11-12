@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cafe, Review
+from .models import Bookmark, Cafe, Review, User
 
 
 class CafeSerializer(serializers.ModelSerializer):
@@ -7,7 +7,7 @@ class CafeSerializer(serializers.ModelSerializer):
         model = Cafe
         fields = (
             'id','place_name','phone','x','y',
-             'road_address_name','main_photo','star_mean'
+             'road_address_name','main_photo','star_mean','bookmark_cnt'
                 )
 
 
@@ -34,5 +34,15 @@ class CafeLocationSerializer(serializers.ModelSerializer):
         fields = ('id','place_name','x','y')     
         
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = (
+            'id','user_id'
+        )
 
-    
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email','password')

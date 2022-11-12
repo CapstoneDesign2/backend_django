@@ -12,6 +12,7 @@ class Cafe(models.Model):
     road_address_name = models.CharField(max_length=128, blank=True, null=True)
     main_photo = models.CharField(max_length=128, blank=True, null=True)
     star_mean = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
+    bookmark_cnt = models.IntegerField()
 
     class Meta:
         managed = False
@@ -34,3 +35,24 @@ class Review(models.Model):
         managed = False
         db_table = 'Review'
         unique_together = (('id', 'store'),)
+
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=128)
+    password = models.CharField(max_length=128)
+
+    class Meta:
+        managed = False
+        db_table = 'User'
+
+class Bookmark(models.Model):
+    user_id = models.IntegerField(primary_key=True)
+    id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'Bookmark'
+        unique_together = (('user_id', 'id'),)
+
+
+        
