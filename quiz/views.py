@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view
 from .models import Bookmark, Cafe, Review, User
 from .serializers import BookmarkSerializer, CafeSerializer, ReviewSerializer, CafeLocationSerializer, UserSerializer
 from rest_framework import status
+from django.http import JsonResponse
+from MyJsonResponse import jres
 import random
 # Create your views here.
  
@@ -65,6 +67,10 @@ def bookmarkEnableAPI(request):
     #이메일 이용해서 유저 데이터 찾음.
     curUser = User.objects.get(email=curEmail)
     
+    IsBookmarkExist = Bookmark.objects.filter(id=curCafeId,user_id=curUser.user_id)
+    if IsBookmarkExist.count() > 0:
+        return jres(False)  #JsonResponse({'message':'Fail'},status=200)
+
     curBookmark = Bookmark.objects.create(user_id = curUser.user_id,id=curCafeId)
 
     #만들기 예제: 
@@ -78,7 +84,7 @@ def bookmarkEnableAPI(request):
     curCafe.bookmark_cnt += 1
     curCafe.save()
     cafeSerializer = CafeSerializer(curCafe)
-    return Response(cafeSerializer.data, status=200)
+    return jres(True,cafeSerializer.data) #JsonResponse({'message':'Success'},data = cafeSerializer.data, status=200)#Response(cafeSerializer.data, status=200)
 
 #sumry: 찜 버튼을 클릭했을 때 카페의 찜 카운트를 -1하고 유저의 찜 목록에서 제거한다.
 #param: email, id
@@ -90,6 +96,11 @@ def bookmarkDisableAPI(request):
     #이메일 이용해서 유저 데이터 찾음.
     curUser = User.objects.get(email=curEmail)
 
+    isNotExistBookmark = Bookmark.objects.filter(user_id=curUser.user_id, id=curCafeId)
+
+    if isNotExistBookmark.count() == 0:
+        return jres(False) #JsonResponse({'message':'Fail'},status=200)
+
     Bookmark.objects.get(user_id=curUser.user_id, id=curCafeId).delete()
 
     #카페 데이터 찾아서 북마크 -1 후 저장.
@@ -97,7 +108,7 @@ def bookmarkDisableAPI(request):
     curCafe.bookmark_cnt -= 1
     curCafe.save()
     cafeSerializer = CafeSerializer(curCafe)
-    return Response(cafeSerializer.data, status=200)
+    return jres(True,cafeSerializer.data) #JsonResponse({'message':'success'},data = cafeSerializer.data, status=200)#Response(cafeSerializer.data, status=200)
 
 #sumry: 유저가 해당 카페를 찜했는지 여부를 리턴한다.
 #param: email, id
@@ -111,9 +122,9 @@ def isBookmarkAPI(request):
     curBookmark = Bookmark.objects.filter(user_id=curUser.user_id,id=curCafeId)
 
     if curBookmark.count() >0:
-        return Response(status=200)
+        return jres(True) #JsonResponse({'message':'Success'},status=200)#Response(status=200)
     else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return jres(False) #Response(status=status.HTTP_400_BAD_REQUEST)
 
 #sumry: 카페를 찜순으로 정렬해서 리턴한다.
 #param: count
