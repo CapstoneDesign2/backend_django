@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Cafe, Review, Signuptest
-from .serializers import CafeSerializer, ReviewSerializer, TestSerializer, CafeLocationSerializer 
+from .models import Cafe, Review
+from .serializers import CafeSerializer, ReviewSerializer, CafeLocationSerializer 
 from rest_framework import status
 import random
 # Create your views here.
@@ -32,20 +32,9 @@ def cafeAPI(request):
 def reviewAPI(request):
     cafeId = int(request.GET['id'])
     numberOfReview = int(request.GET['count'])
-    reviews = Review.objects.filter(id=cafeId)[0:numberOfReview]
+    reviews = Review.objects.filter(store=cafeId)[0:numberOfReview]
     serializer = ReviewSerializer(reviews,many=True)
     return Response(serializer.data)
-
-# signup Test code
-@api_view(['POST'])
-def signupTestAPI(request):
-    reqData = request.data
-    serializer = TestSerializer(data = reqData)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # sumry: user 의 현재 x , y 좌표를 가져온다.
 # param: x, y
@@ -65,10 +54,6 @@ def cafeLocationAPI(request):
     
     serializer = CafeLocationSerializer(CafeLocationlist,many=True)
     return Response(serializer.data)
-
-
-#성원 의미없는 주석
-#성원 의미없는 주석2
 
 '''
 @api_view(['GET'])
