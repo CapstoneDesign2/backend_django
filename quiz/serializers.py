@@ -1,22 +1,25 @@
 from rest_framework import serializers
-from .models import Cafe, Review, Signuptest
+from .models import Bookmark, Cafe, Review, User
 
 
 class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
-        fields = ('id','place_name','phone','x','y')
+        fields = (
+            'id','place_name','phone','x','y',
+             'road_address_name','main_photo','star_mean','bookmark_cnt'
+                )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('id','reviewer_name','content')
-        
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Signuptest
-        fields = ('id','name')
+        fields = (
+            'id','store','username','contents',
+            'point','photocnt','likecnt',
+            'usercommentcount','usercommentaveragescore',
+            'date','kakaomapuserid'
+        )
 
 class CafeLocationSerializer(serializers.ModelSerializer):
     
@@ -31,5 +34,15 @@ class CafeLocationSerializer(serializers.ModelSerializer):
         fields = ('id','place_name','x','y')     
         
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = (
+            'id','user_id'
+        )
 
-    
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email','password')
