@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Cafe, Review, Signuptest
-from .serializers import CafeSerializer, ReviewSerializer, TestSerializer, CafeLocationSerializer 
+from .models import Cafe, Review
+from .serializers import CafeSerializer, ReviewSerializer, CafeLocationSerializer 
 from rest_framework import status
 import random
 # Create your views here.
@@ -52,10 +52,6 @@ def cafeLocationAPI(request):
     
     serializer = CafeLocationSerializer(CafeLocationlist,many=True)
     return Response(serializer.data)
-
-
-#성원 의미없는 주석
-#성원 의미없는 주석2
 
 '''
 @api_view(['GET'])

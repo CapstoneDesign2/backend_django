@@ -5,13 +5,21 @@ from .models import Cafe, Review
 class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
-        fields = ('id','place_name','phone','x','y')
+        fields = (
+            'id','place_name','phone','x','y',
+             'road_address_name','main_photo','star_mean'
+                )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('id','reviewer_name','content')
+        fields = (
+            'id','store','username','contents',
+            'point','photocnt','likecnt',
+            'usercommentcount','usercommentaveragescore',
+            'date','kakaomapuserid'
+        )
 
 class CafeLocationSerializer(serializers.ModelSerializer):
     
