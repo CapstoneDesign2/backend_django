@@ -39,6 +39,8 @@ def reviewAPI(request):
 # sumry: user 의 현재 x , y 좌표를 가져온다.
 # param: x, y
 # usage: /quiz/location?x=&y=
+# 의미없는 주석
+# 의미없는 추석
 @api_view(['GET'])
 def cafeLocationAPI(request):
    
