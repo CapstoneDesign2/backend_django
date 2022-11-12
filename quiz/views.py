@@ -36,17 +36,6 @@ def reviewAPI(request):
     serializer = ReviewSerializer(reviews,many=True)
     return Response(serializer.data)
 
-# signup Test code
-@api_view(['POST'])
-def signupTestAPI(request):
-    reqData = request.data
-    serializer = TestSerializer(data = reqData)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 # sumry: user 의 현재 x , y 좌표를 가져온다.
 # param: x, y
 # usage: /quiz/location?x=&y=
