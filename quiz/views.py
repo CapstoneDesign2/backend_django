@@ -25,7 +25,7 @@ def cafeAPI(request):
     numberOfCafe = int(request.GET['count'])
     cafes = Cafe.objects.all()[0:numberOfCafe]
     serializer = CafeSerializer(cafes,many=True)
-    return Response(serializer.data)
+    return jres(True, serializer.data) #Response(serializer.data)
 
 # sumry: id(카페id)에 맞는 리뷰를 count개 만큼 불러온다.
 # param: id, count 
@@ -36,7 +36,7 @@ def reviewAPI(request):
     numberOfReview = int(request.GET['count'])
     reviews = Review.objects.filter(store=cafeId)[0:numberOfReview]
     serializer = ReviewSerializer(reviews,many=True)
-    return Response(serializer.data)
+    return jres(True, serializer.data)#Response(serializer.data)
 
 # sumry: user 의 현재 x , y 좌표를 가져온다.
 # param: x, y
@@ -55,7 +55,7 @@ def cafeLocationAPI(request):
     CafeLocationlist = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 50 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
     
     serializer = CafeLocationSerializer(CafeLocationlist,many=True)
-    return Response(serializer.data)
+    return jres(True, serializer.data)#Response(serializer.data)
 
 #sumry: 찜 버튼을 클릭했을 때 카페의 찜 카운트를 +1하고 유저의 찜 목록에 추가한다.
 #param: email, id
@@ -134,7 +134,7 @@ def orderByBookmarkAPI(request):
     numberOfCafe = int(request.GET['count'])
     cafes = Cafe.objects.all().order_by('-bookmark_cnt')[0:numberOfCafe]
     serializer = CafeSerializer(cafes,many=True)
-    return Response(serializer.data)
+    return jres(True,serializer.data) #Response(serializer.data), 반드시 복구
 
 #sumry: 유저가 찜한 카페를 리턴한다.
 #param: email
@@ -146,7 +146,7 @@ def bookmarkListAPI(request):
     bookmarkedCafeList = Bookmark.objects.filter(user_id=curUser.user_id).values_list('id',flat=True)
     cafes = Cafe.objects.filter(id__in=bookmarkedCafeList)
     serializer = CafeSerializer(cafes,many=True)
-    return Response(serializer.data)
+    return jres(True, serializer.data) #Response(serializer.data)
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):

@@ -15,9 +15,8 @@ from MyJsonResponse import jres
 @api_view(['GET'])
 def doubleCheckAPI(request):
     curEmail = str(request.GET['email'])
-
-    #유저 정보 중 겹치는 이메일이 있는지 검사한다.
     check = User.objects.filter(email=curEmail)
+    return jres(False) if check.count() > 0 else jres(True)
 
     if check.count() > 0:
         return jres(False)#JsonResponse({'message':'Fail'},status=200)#HttpResponse(status=status.HTTP_400_BAD_REQUEST)
@@ -29,14 +28,8 @@ def doubleCheckAPI(request):
 #usage: /login/sign_up/register
 @api_view(['POST'])
 def registerAPI(request):
-    if request.method == 'POST':
-        serializer = UserSerializer(data = request.data)
-        #저장
-        if serializer.is_valid():
-            serializer.save()
-            return jres(False)#JsonResponse({'message':'Fail'},status=200)#Response(serializer.data, status=200)
-        else:
-            return jres(True,serializer.data)#JsonResponse({'message':'Success'},data=serializer.data,status=200)#Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+    newUser = User.objects.create(email=request.data['email'],password=request.data['password'])
+    return jres(True,UserSerializer(newUser).data) #JsonResponse(UserSerializer(newUser).data,status=200)
 
 #sumry: 이메일, 암호 받아서 로그인 시도.
 #param: email, password
@@ -45,9 +38,10 @@ def registerAPI(request):
 def loginAPI(request):
     curEmail = str(request.GET['email'])
     curPassword = str(request.GET['password'])
-
     userInfo = User.objects.filter(email=curEmail,password=curPassword)
+    return jres(True) if userInfo.count() > 0 else jres(False)
+
     if userInfo.count() >0:
-        return jres(False)#JsonResponse({'message':'Fail'},status=200)#Response(status=200)
+        return jres(False) #JsonResponse({'message':'Fail'},status=200)#Response(status=200)
     else:
         return jres(True)#JsonResponse({'message':'Success'},status=200)#Response(status=status.HTTP_400_BAD_REQUEST)

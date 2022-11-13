@@ -1,5 +1,9 @@
 from django.http import JsonResponse
+import json
 
-def jres(isSuccess, dataToSend = None):
+def jres(isSuccess,data = None):
     successOrFail = 'Success' if isSuccess else 'Fail'
-    return JsonResponse({'message':successOrFail}, data = dataToSend, status=200)
+    retData = {}
+    retData['message'] = successOrFail
+    retData['data'] = data
+    return JsonResponse(data = retData, status=200)
