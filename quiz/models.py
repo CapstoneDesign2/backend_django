@@ -30,6 +30,7 @@ class Review(models.Model):
     usercommentaveragescore = models.DecimalField(db_column='userCommentAverageScore', max_digits=3, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     date = models.CharField(max_length=20, blank=True, null=True)
     kakaomapuserid = models.CharField(db_column='kakaoMapUserId', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    photolist = models.CharField(db_column='photoList', max_length=1024, blank=True, null=True)
 
     class Meta:
         managed = False
