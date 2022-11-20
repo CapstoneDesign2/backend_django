@@ -18,7 +18,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'id','store','username','contents',
             'point','photocnt','likecnt',
             'usercommentcount','usercommentaveragescore',
-            'date','kakaomapuserid'
+            'date','kakaomapuserid','photolist'
         )
 
 class CafeLocationSerializer(serializers.ModelSerializer):
