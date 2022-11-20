@@ -147,6 +147,9 @@ def bookmarkListAPI(request):
     cafes = Cafe.objects.filter(id__in=bookmarkedCafeList)
     serializer = CafeSerializer(cafes,many=True)
     return jres(True, serializer.data) #Response(serializer.data)
+
+#git test
+
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):
