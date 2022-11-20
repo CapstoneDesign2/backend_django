@@ -6,9 +6,9 @@ from .serializers import BookmarkSerializer, CafeSerializer, ReviewSerializer, C
 from rest_framework import status
 from django.http import JsonResponse
 from MyJsonResponse import jres
+from haversine import haversine
 import random
 # Create your views here.
- 
 
 # sumry: 테스트용 api.
 # param:
@@ -55,6 +55,7 @@ def cafeLocationAPI(request):
     CafeLocationlist = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 50 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
     
     serializer = CafeLocationSerializer(CafeLocationlist,many=True)
+    
     return jres(True, serializer.data)#Response(serializer.data)
 
 #sumry: 찜 버튼을 클릭했을 때 카페의 찜 카운트를 +1하고 유저의 찜 목록에 추가한다.
@@ -147,6 +148,51 @@ def bookmarkListAPI(request):
     cafes = Cafe.objects.filter(id__in=bookmarkedCafeList)
     serializer = CafeSerializer(cafes,many=True)
     return jres(True, serializer.data) #Response(serializer.data)
+
+#sumry: 추천 순으로 정렬한다.
+#param: keyword1~keyword5, location
+#usage: /quiz/cafe/recommend?keyword1=&...keyword5=&x=&y=
+
+@api_view(['GET'])
+def recommendAPI(request):
+
+    curX = float(request.GET['x'])
+    curY = float(request.GET['y'])
+    
+    keywordList = []
+
+    # keyword1 ~ keyword5
+    for i in range(1,6):
+        try:
+            curKeyword = str(request.GET(['keyword'+str(i)]))
+            keywordList.append(curKeyword)
+        except:
+            pass
+    
+    #1. 일정 거리 안에 있는 카페를 DB에서 가져온다.
+    cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 500 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
+    cafeList = CafeLocationSerializer(cafeModelList,many=True).data
+
+    #2. 각 카페에 대해서 유사도를 계산한다(핵심).
+    for cafe in cafeList:
+        cafe['distance'] = get_distance(keywordList,curX,curY,cafe)
+    
+    #3. 유사도 순으로 정렬한다.
+    #아직 필요 없음
+
+    return jres(True, cafeList)
+
+def get_distance(keywordList, x, y, cafe):
+    
+    cafeX = float(cafe['y'])
+    cafeY = float(cafe['x'])
+
+    cafePoint = (cafeX, cafeY)
+    userPoint = (y,x)
+
+    return haversine(cafePoint, userPoint, unit = 'm')
+
+
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):
