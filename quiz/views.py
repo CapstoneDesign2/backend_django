@@ -149,6 +149,7 @@ def bookmarkListAPI(request):
     return jres(True, serializer.data) #Response(serializer.data)
 
 #git test
+#git test2
 
 
 '''
