@@ -151,18 +151,17 @@ def bookmarkListAPI(request):
 
 #sumry: 추천 순으로 정렬한다.
 #param: keyword1~keyword5, location
-#usage: /quiz/cafe/recommend?keyword1=&...keyword5=&x=&y=
-
+#usage: /quiz/cafe/recommend?keyword1=&...keyword3=&x=&y=&loc=
 @api_view(['GET'])
 def recommendAPI(request):
 
     curX = float(request.GET['x'])
     curY = float(request.GET['y'])
-    
+    rLoc = float(request.GET['loc'])
     keywordList = []
 
-    # keyword1 ~ keyword5
-    for i in range(1,6):
+    # keyword1 ~ keyword3
+    for i in range(1,4):
         try:
             curKeyword = str(request.GET(['keyword'+str(i)]))
             keywordList.append(curKeyword)
@@ -170,12 +169,20 @@ def recommendAPI(request):
             pass
     
     #1. 일정 거리 안에 있는 카페를 DB에서 가져온다.
-    cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 500 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
+    cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s ORDER BY Distance',([curX],[curY],[curX],[curY],[rLoc]) )
     cafeList = CafeLocationSerializer(cafeModelList,many=True).data
 
     #2. 각 카페에 대해서 유사도를 계산한다(핵심).
     for cafe in cafeList:
         cafe['distance'] = get_distance(keywordList,curX,curY,cafe)
+    
+    #코드
+    
+    
+    
+    
+    
+    #코드 끝
     
     #3. 유사도 순으로 정렬한다.
     #아직 필요 없음
