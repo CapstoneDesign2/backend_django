@@ -248,6 +248,8 @@ def recommendAPI(request):
     df_t_index = (df_t.index).to_numpy()   
     df_s = df.reindex(df_t_index)                    
     result = (df_s.reset_index().to_json(orient='records'))
+    
+    #임시 결과값
     print(result)
     
     #return jres(True, result)
