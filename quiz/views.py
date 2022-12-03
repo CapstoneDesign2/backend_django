@@ -8,6 +8,12 @@ from django.http import JsonResponse
 from MyJsonResponse import jres
 from haversine import haversine
 import random
+import pandas as pd
+import numpy as np
+from numpy import dot 
+from numpy.linalg import norm
+import json
+
 # Create your views here.
 
 # sumry: 테스트용 api.
@@ -22,11 +28,13 @@ def helloAPI(request):
 # usage: /quiz/cafe?count=3
 @api_view(['GET'])
 def cafeAPI(request):
+    
     numberOfCafe = int(request.GET['count'])
     cafes = Cafe.objects.all()[0:numberOfCafe]
     serializer = CafeSerializer(cafes,many=True)
+   
     return jres(True, serializer.data) #Response(serializer.data)
-
+   
 # sumry: id(카페id)에 맞는 리뷰를 count개 만큼 불러온다.
 # param: id, count 
 # usage: /quiz/review?id=1&count=3
@@ -158,13 +166,15 @@ def recommendAPI(request):
     curX = float(request.GET['x'])
     curY = float(request.GET['y'])
     rLoc = float(request.GET['loc'])
+
     keywordList = []
 
     # keyword1 ~ keyword3
     for i in range(1,4):
         try:
-            curKeyword = str(request.GET(['keyword'+str(i)]))
+            curKeyword = (request.GET['keyword'+str(i)])
             keywordList.append(curKeyword)
+        
         except:
             pass
     
@@ -176,17 +186,71 @@ def recommendAPI(request):
     for cafe in cafeList:
         cafe['distance'] = get_distance(keywordList,curX,curY,cafe)
     
+    
     #코드
     
+    #데이터 전처리
+    
+    #1_1. 데이터 df화
+    #df_cafe = pd.DataFrame(cafeList)
+    #print(df_cafe)
+    
+    #1_1. 임시 csv파일
+    txt_path = "cafe.csv"
+    df = pd.read_csv(txt_path, sep='|')
+    
+    #1_2. 필요한 Data column 추출 
+    df_t = df[['tasty','clean','effective','kind','vibe']]
+    df_t =df_t.replace(np.nan,0.0)
     
     
+    #가중치 설정 
+    #받은 키워드를 순서대로 가중치 1, 0.8, 0.6으로 부여 
+    df_t_column = df_t.columns.values.tolist()
     
+    weight_t = np.array([0.1, 0.1, 0.1, 0.1, 0.1])
     
-    #코드 끝
+    k = 10
+    for i in range(0, 3):
+        for j in range(0, 5):
+            if(keywordList[i] == df_t_column[j]): 
+                weight_t[j] *= k
+                k -= 2
+                
+    #유사도 구하기
     
-    #3. 유사도 순으로 정렬한다.
-    #아직 필요 없음
+    #1.데이터 평준화 과정     
+    max = df_t.max().to_numpy()
+    max_sum = max.sum()
+    max_sum_f = max_sum / max   
+    
+    #2.평준화된 데이터에 가중치를 곱함
+    r_max = max_sum_f * weight_t
+    
+    #3.최적카페 
+    standard_cafe = np.array([50, 50, 50, 50, 50]) 
+    
+    test = []
+    count = len(df_t.index)
+    
+    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨
+    for i in range(0,count):
+        temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
+        temp = euc_sim(standard_cafe,temp_np)
+        test.append(temp)
+        df_t.iloc[i] = temp_np * standard_cafe / r_max
 
+    #5.유사도로 정렬
+    df_t['euc'] = test       
+    df_t = df_t.sort_values(by=['euc'])
+    
+    #6.결과값을 기준으로 카페를 다시 재정렬하고 json파일로 변환    
+    df_t_index = (df_t.index).to_numpy()   
+    df_s = df.reindex(df_t_index)                    
+    result = (df_s.reset_index().to_json(orient='records'))
+    print(result)
+    
+    #return jres(True, result)
     return jres(True, cafeList)
 
 def get_distance(keywordList, x, y, cafe):
@@ -199,7 +263,11 @@ def get_distance(keywordList, x, y, cafe):
 
     return haversine(cafePoint, userPoint, unit = 'm')
 
+def cos_sim(A, B, C):
+    return dot((A*C), (B*C))/(norm(A) * norm(B))
 
+def euc_sim(A, B):
+   return np.sqrt(np.sum((A-B)**2))
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):
