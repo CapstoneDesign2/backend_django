@@ -250,7 +250,7 @@ def recommendAPI(request):
     result = (df_s.reset_index().to_json(orient='records'))
     
     #임시 결과값
-    print(result)
+    #print(result)
     
     #return jres(True, result)
     return jres(True, cafeList)
