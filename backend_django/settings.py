@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'quiz',
     'login',
     'rest_framework',
-    'pandas' 
+     
 ]
 
 MIDDLEWARE = [
