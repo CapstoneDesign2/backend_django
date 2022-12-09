@@ -32,7 +32,7 @@ def cafeAPI(request):
     numberOfCafe = int(request.GET['count'])
     cafes = Cafe.objects.all()[0:numberOfCafe]
     serializer = CafeSerializer(cafes,many=True)
-   
+    
     return jres(True, serializer.data) #Response(serializer.data)
    
 # sumry: id(카페id)에 맞는 리뷰를 count개 만큼 불러온다.
@@ -60,11 +60,18 @@ def cafeLocationAPI(request):
     # 가능 cafeLocationlist = Cafe.objects.raw('SELECT * FROM Cafe WHERE (x + y) > (%s - %s)',([curX],[curY]))
     # 가능 cafeLocationlist = Cafe.objects.raw('SELECT * FROM Cafe WHERE (x + y) > 164.492')
     
-    CafeLocationlist = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 50 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
+    #CafeLocationlist = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= 500 ORDER BY Distance',([curX],[curY],[curX],[curY]) )
     
-    serializer = CafeLocationSerializer(CafeLocationlist,many=True)
-    
-    return jres(True, serializer.data)#Response(serializer.data)
+    #CafeLocationlist = Cafe.objects.all()
+    #serializer = CafeLocationSerializer(CafeLocationlist,many=True)
+    cafeModelList = Cafe.objects.all()
+    cafeList = CafeLocationSerializer(cafeModelList,many=True).data
+
+    for cafe in cafeList:
+        cafe['distance'] = get_distance(curX,curY,cafe)
+
+    print(cafeList)   
+    return jres(True, cafeList)#Response(serializer.data)
 
 #sumry: 찜 버튼을 클릭했을 때 카페의 찜 카운트를 +1하고 유저의 찜 목록에 추가한다.
 #param: email, id
@@ -179,15 +186,16 @@ def recommendAPI(request):
             pass
     
     #1. 일정 거리 안에 있는 카페를 DB에서 가져온다.
-    cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s ORDER BY Distance',([curX],[curY],[curX],[curY],[rLoc]) )
+    #cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s ORDER BY Distance',([curX],[curY],[curX],[curY],[rLoc]) )
+    cafeModelList = Cafe.objects.all()
     cafeList = CafeLocationSerializer(cafeModelList,many=True).data
 
     #2. 각 카페에 대해서 유사도를 계산한다(핵심).
     for cafe in cafeList:
-        cafe['distance'] = get_distance(keywordList,curX,curY,cafe)
+        cafe['distance'] = get_distance(curX,curY,cafe)
     
     
-    '''
+    
     #코드
         
     #데이터 전처리
@@ -262,10 +270,10 @@ def recommendAPI(request):
     
     
     #return jres(True, result)
-    '''
+    
     return jres(True, cafeList)
 
-def get_distance(keywordList, x, y, cafe):
+def get_distance(x, y, cafe):
     
     cafeX = float(cafe['y'])
     cafeY = float(cafe['x'])
