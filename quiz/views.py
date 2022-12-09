@@ -264,7 +264,9 @@ def recommendAPI(request):
     df_result = df_cafe.reindex(df_t_index)
     print(df_result)
                       
-    result = (df_result.reset_index().to_json(orient='records'))
+    #result = (df_result.reset_index().to_json(orient='records'))
+    
+    result = df_result.to_dict(orient='records')
     
     #임시 결과값
     
