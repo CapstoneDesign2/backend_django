@@ -233,7 +233,6 @@ def recommendAPI(request):
     test = []
     count = len(df_t.index)
     
-    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨
     for i in range(0,count):
         temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
         temp = euc_sim(standard_cafe,temp_np)
