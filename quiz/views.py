@@ -32,7 +32,7 @@ def cafeAPI(request):
     numberOfCafe = int(request.GET['count'])
     cafes = Cafe.objects.all()[0:numberOfCafe]
     serializer = CafeSerializer(cafes,many=True)
-    
+    print(type(serializer))
     return jres(True, serializer.data) #Response(serializer.data)
    
 # sumry: id(카페id)에 맞는 리뷰를 count개 만큼 불러온다.
@@ -245,7 +245,7 @@ def recommendAPI(request):
     #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨    
     test = []
     count = len(df_t.index)
-    print(count)
+    #print(count)
     
     for i in range(0,count):
         temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
@@ -268,12 +268,17 @@ def recommendAPI(request):
     #코드
     
     result = df_result.to_dict(orient='records')
-    result1 = json.dumps(result)
-    print(result1)
+    #result = df_result.reset_index().to_json(orient='records')
+    #print(type(result))
+    
+    #result1 = json.loads(df_result)
+    #result2 = json.dump(result1)
+    
+    #print(type(result2))
     
     #임시 결과값
     
-    return jres(True, result1)
+    return jres(True, result)
     
     #return jres(True, cafeList)
 
