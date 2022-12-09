@@ -257,16 +257,17 @@ def recommendAPI(request):
     df_t['euc'] = test       
     df_t = df_t.sort_values(by=['euc'])
     
-    print(df_t)
+    
     
     #6.결과값을 기준으로 카페를 다시 재정렬하고 json파일로 변환    
     df_t_index = (df_t.index).to_numpy()   
     df_result = df_cafe.reindex(df_t_index)
-    print(df_result)
+    df_result = df_result.replace(np.nan,0.0)
                       
     #result = (df_result.reset_index().to_json(orient='records'))
     
     result = df_result.to_dict(orient='records')
+    print(result)
     
     #임시 결과값
     
