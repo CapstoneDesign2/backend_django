@@ -188,7 +188,7 @@ def recommendAPI(request):
     
     
     #코드
-    
+        
     #데이터 전처리
     
     #1_1. 데이터 df화
@@ -207,6 +207,7 @@ def recommendAPI(request):
     #가중치 설정 
     #받은 키워드를 순서대로 가중치 1, 0.8, 0.6으로 부여 
     df_t_column = df_t.columns.values.tolist()
+    #형식을 맞춤
     
     weight_t = np.array([0.1, 0.1, 0.1, 0.1, 0.1])
     
@@ -229,11 +230,12 @@ def recommendAPI(request):
     
     #3.최적카페 
     standard_cafe = np.array([50, 50, 50, 50, 50]) 
+
     
+    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨    
     test = []
     count = len(df_t.index)
     
-    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨
     for i in range(0,count):
         temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
         temp = euc_sim(standard_cafe,temp_np)
@@ -250,7 +252,7 @@ def recommendAPI(request):
     result = (df_s.reset_index().to_json(orient='records'))
     
     #임시 결과값
-    #print(result)
+    print(result)
     
     #return jres(True, result)
     return jres(True, cafeList)

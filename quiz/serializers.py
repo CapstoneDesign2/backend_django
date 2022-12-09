@@ -7,7 +7,8 @@ class CafeSerializer(serializers.ModelSerializer):
         model = Cafe
         fields = (
             'id','place_name','phone','x','y',
-             'road_address_name','main_photo','star_mean','bookmark_cnt'
+             'road_address_name','main_photo','star_mean','bookmark_cnt','comment_count'
+             
                 )
 
 
@@ -31,7 +32,7 @@ class CafeLocationSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Cafe
-        fields = ('id','place_name','x','y')     
+        fields = ('id','place_name','x','y', 'road_address_name','main_photo','star_mean','bookmark_cnt','comment_count','tasty','clean','effective','vibe','kind')     
         
 
 class BookmarkSerializer(serializers.ModelSerializer):
