@@ -192,15 +192,15 @@ def recommendAPI(request):
     #데이터 전처리
     
     #1_1. 데이터 df화
-    #df_cafe = pd.DataFrame(cafeList)
-    #print(df_cafe)
+    df_cafe = pd.DataFrame(cafeList)
+    
     
     #1_1. 임시 csv파일
-    txt_path = "cafe.csv"
-    df = pd.read_csv(txt_path, sep='|')
+    #txt_path = "cafe.csv"
+    #df = pd.read_csv(txt_path, sep='|')
     
     #1_2. 필요한 Data column 추출 
-    df_t = df[['tasty','clean','effective','kind','vibe']]
+    df_t = df_cafe[['tasty','clean','effective','kind','vibe']]
     df_t =df_t.replace(np.nan,0.0)
     
     
@@ -246,13 +246,17 @@ def recommendAPI(request):
     df_t['euc'] = test       
     df_t = df_t.sort_values(by=['euc'])
     
+    print(df_t)
+    
     #6.결과값을 기준으로 카페를 다시 재정렬하고 json파일로 변환    
     df_t_index = (df_t.index).to_numpy()   
-    df_s = df.reindex(df_t_index)                    
-    result = (df_s.reset_index().to_json(orient='records'))
+    df_result = df_cafe.reindex(df_t_index)
+    print(df_result)
+                      
+    result = (df_result.reset_index().to_json(orient='records'))
     
     #임시 결과값
-    print(result)
+    
     
     #return jres(True, result)
     return jres(True, cafeList)
