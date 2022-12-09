@@ -13,6 +13,12 @@ class Cafe(models.Model):
     main_photo = models.CharField(max_length=128, blank=True, null=True)
     star_mean = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     bookmark_cnt = models.IntegerField()
+    comment_count = models.IntegerField(blank=True, null=True)
+    effective = models.IntegerField(blank=True, null=True)
+    clean = models.IntegerField(blank=True, null=True)
+    tasty = models.IntegerField(blank=True, null=True)
+    vibe = models.IntegerField(blank=True, null=True)
+    kind = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
