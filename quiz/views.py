@@ -187,6 +187,7 @@ def recommendAPI(request):
         cafe['distance'] = get_distance(keywordList,curX,curY,cafe)
     
     
+    '''
     #코드
         
     #데이터 전처리
@@ -202,6 +203,7 @@ def recommendAPI(request):
     #1_2. 필요한 Data column 추출 
     df_t = df_cafe[['tasty','clean','effective','kind','vibe']]
     df_t =df_t.replace(np.nan,0.0)
+    
     
     
     #가중치 설정 
@@ -221,7 +223,7 @@ def recommendAPI(request):
     #유사도 구하기
     
     #1.데이터 평준화 과정     
-    max = df_t.max().to_numpy()
+    max = df_t.max().to_numpy()     
     max_sum = max.sum()
     max_sum_f = max_sum / max   
     
@@ -235,6 +237,7 @@ def recommendAPI(request):
     #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨    
     test = []
     count = len(df_t.index)
+    print(count)
     
     for i in range(0,count):
         temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
@@ -259,6 +262,7 @@ def recommendAPI(request):
     
     
     #return jres(True, result)
+    '''
     return jres(True, cafeList)
 
 def get_distance(keywordList, x, y, cafe):
