@@ -269,9 +269,9 @@ def recommendAPI(request):
     #임시 결과값
     
     
-    #return jres(True, result)
+    return jres(True, result)
     
-    return jres(True, cafeList)
+    #return jres(True, cafeList)
 
 def get_distance(x, y, cafe):
     
