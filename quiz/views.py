@@ -265,14 +265,15 @@ def recommendAPI(request):
     df_result = df_result.replace(np.nan,0.0)
                       
     #result = (df_result.reset_index().to_json(orient='records'))
+    #코드
     
     result = df_result.to_dict(orient='records')
-    print(result)
+    result1 = json.dumps(result)
+    print(result1)
     
     #임시 결과값
     
-    
-    return jres(True, result)
+    return jres(True, result1)
     
     #return jres(True, cafeList)
 
