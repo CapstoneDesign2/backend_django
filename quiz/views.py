@@ -21,7 +21,7 @@ import json
 # usage: /quiz/hello
 @api_view(['GET'])
 def helloAPI(request):
-    return Response("hello world!")
+    return Response("hello world! Test clear")
 
 # sumry: 카페를 count개 만큼 불러온다.
 # param: count
@@ -242,14 +242,15 @@ def recommendAPI(request):
     standard_cafe = np.array([50, 50, 50, 50, 50]) 
 
     
-    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨    
+    #4.유클리디언 유사도 계산 / 코사인 유사도 쓰면 안됨 / 맨헤튼 
     test = []
     count = len(df_t.index)
     #print(count)
     
     for i in range(0,count):
         temp_np = (df_t.iloc[i].to_numpy() / standard_cafe) * r_max 
-        temp = euc_sim(standard_cafe,temp_np)
+        #temp = euc_sim(standard_cafe,temp_np)
+        temp = manhattan_distance(standard_cafe,temp_np)
         test.append(temp)
         df_t.iloc[i] = temp_np * standard_cafe / r_max
 
@@ -257,13 +258,14 @@ def recommendAPI(request):
     df_t['euc'] = test       
     df_t = df_t.sort_values(by=['euc'])
     
-    
+    print(df_t)
     
     #6.결과값을 기준으로 카페를 다시 재정렬하고 json파일로 변환    
     df_t_index = (df_t.index).to_numpy()   
     df_result = df_cafe.reindex(df_t_index)
     df_result = df_result.replace(np.nan,0.0)
-                      
+    
+    print(df_result)                  
     #result = (df_result.reset_index().to_json(orient='records'))
     #코드
     
@@ -297,6 +299,9 @@ def cos_sim(A, B, C):
 
 def euc_sim(A, B):
    return np.sqrt(np.sum((A-B)**2))
+
+def manhattan_distance(x,y): 
+    return sum(abs(a-b) for a,b in zip(x,y))
 '''
 @api_view(['GET'])
 def randomQuiz(request,id):
