@@ -182,9 +182,9 @@ def recommendAPI(request):
     
     #1. 일정 거리 안에 있는 카페를 DB에서 가져온다.
     #cafeModelList = Cafe.objects.raw('SELECT id, ST_Distance_Sphere(Point(x,y), Point(%s,%s)) as Distance FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s ORDER BY Distance',([curX],[curY],[curX],[curY],[rLoc]) )
-    CafeLocationlist = Cafe.objects.raw('SELECT id FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s',([curX],[curY],[rLoc]))
-    #cafeModelList = Cafe.objects.all()
-    cafeList = CafeLocationSerializer(CafeLocationlist,many=True).data
+    #CafeLocationlist = Cafe.objects.raw('SELECT id FROM Cafe WHERE ST_Distance_Sphere(Point(x,y), Point(%s,%s)) <= %s',([curX],[curY],[rLoc]))
+    cafeModelList = Cafe.objects.all()
+    cafeList = CafeLocationSerializer(cafeModelList,many=True).data
 
     #2. 각 카페에 대해서 유사도를 계산한다(핵심).
     for cafe in cafeList:
