@@ -32,7 +32,7 @@ IS_HEROKU = "DYNO" in os.environ
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["DJANGO_SECRET"] if IS_HEROKU else my_secret
+SECRET_KEY = os.environ["DJANGO_SECRET"] #if IS_HEROKU else my_secret
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # 헤로쿠 환경인 경우 DEBUG는 False 로 세팅.
