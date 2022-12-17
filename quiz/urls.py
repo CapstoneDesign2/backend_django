@@ -2,8 +2,8 @@ from django.urls import path, include
 from .views import bookmarkDisableAPI, bookmarkEnableAPI, bookmarkListAPI, cafeAPI, helloAPI, isBookmarkAPI, orderByBookmarkAPI, recommendAPI, reviewAPI, cafeLocationAPI
 
 urlpatterns = [
-    path("hello/",helloAPI),
-    path("cafe/",cafeAPI),
+    path("hello/",helloAPI,name='hello'),
+    path("cafe/",cafeAPI,name='cafe'),
     path("review/",reviewAPI),
     path("location/",cafeLocationAPI),
     path("cafe/bookmark/enable",bookmarkEnableAPI),
